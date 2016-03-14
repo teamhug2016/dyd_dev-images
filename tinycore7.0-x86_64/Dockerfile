@@ -12,3 +12,4 @@ RUN mkdir -p /tmp/tce/optional \
 
 USER tc
 CMD ["/bin/sh"]
+WORKDIR /data
