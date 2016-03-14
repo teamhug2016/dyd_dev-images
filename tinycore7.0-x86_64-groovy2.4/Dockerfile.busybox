@@ -1,0 +1,9 @@
+FROM jeanblanchard/busybox-java
+RUN opkg-install bash
+RUN curl -SLOk http://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.6.zip \
+    && curl -SLOk https://services.gradle.org/distributions/gradle-2.12-bin.zip \
+    && unzip gradle-2.12-bin.zip \
+    && unzip apache-groovy-binary-2.4.6.zip \
+    && mv gradle-2.12 /opt/gradle-2.12 \
+    && mv groovy-2.4.6 /opt/groovy-2.4.6
+ENV PATH $PATH:/opt/groovy-2.4.6/bin:/opt/gradle-2.12/bin

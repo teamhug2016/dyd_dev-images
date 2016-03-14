@@ -1,0 +1,43 @@
+FROM dev/tinycore7.0-x86_64
+
+# Instructions are run with 'tc' user
+
+RUN tce-load -wic gnupg curl \
+    && rm -rf /tmp/tce/optional/*
+
+RUN tce-load -wic coreutils \
+        binutils \
+        file \
+        java-installer \
+   && cd /tmp/tce/optional \
+    && for PKG in acl.tcz \
+                libcap.tcz \
+                coreutils.tcz \
+                binutils.tcz \
+                java-installer \
+                file.tcz; do \
+            echo "Removing $PKG files"; \
+            for F in `unsquashfs -l $PKG | grep squashfs-root | sed -e 's/squashfs-root//'`; do \
+                [ -f $F -o -L $F ] && sudo rm -f $F; \
+            done; \
+            INSTALLED=$(echo -n $PKG | sed -e s/.tcz//); \
+            sudo rm -f /usr/local/tce.installed/$INSTALLED; \
+        done \
+    && rm -rf /tmp/tce/optional/*  \
+    && curl -SLO https://edelivery.oracle.com/otn-pub/java/jdk/8u73-b02/jdk-8u73-linux-x64.tar.gz -H "Cookie: oraclelicense=accept-securebackup-cookie" \
+    && sudo java-installer
+#    && exit 1
+#    && tar -zxvf jdk-8u73-linux-x64.tar.gz  \
+#    && rm jdk-8u73-linux-x64.tar.gz \
+#    && ls -la \
+#    && mv jdk1.8.0_73 /opt/java/ \
+#    && echo "export JAVA_HOME=/opt/java" > /root/.profile \
+#    && echo "export PATH=$PATH:/opt/java/bin" > /root/.profile
+    
+
+
+
+# Instructions after here are run with 'root' user
+USER root
+
+CMD ["javac -version"]
