@@ -31,4 +31,4 @@ RUN cd /tmp && \
 ENV JAVA_HOME /jdk
 ENV GROOVY_HOME /groovy
 ENV PATH $GROOVY_HOME/bin/:/gradle/bin/:$PATH
-EXPOSE 4567
+WORKDIR /data
